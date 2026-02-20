@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Engineering Paper Generator</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="is-preload">
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+	<!-- Header -->
+	<!-- Note: The "styleN" class below should match that of the banner element. -->
+	<header id="header" class="alt style2">
+		<a href="index.html" class="logo"><strong>PAPER</strong> <span>WHAT</span></a>
+		<nav>
+			<a href="#menu">Menu</a>
+		</nav>
+	</header>
+
+	<!-- Menu -->
+	<nav id="menu">
+		<ul class="links">
+			<li><a href="index.html">Home</a></li>
+			<li><a href="grid.html">Grid</a></li>
+			<li><a href="landing.html">Isometric</a></li>
+			<li><a href="landing.html">Lined</a></li>
+			<li><a href="generic.html">Engineering</a></li>
+			<li><a href="elements.html">Dot Grid</a></li>
+			<li><a href="elements.html">Other</a></li>
+		</ul>
+	</nav>
+
+	<!-- Banner -->
+	<!-- Note: The "styleN" class below should match that of the header element. -->
+	<section id="banner" class="style2">
+				<div class="inner">
+					<span class="image">
+						<img src="images/pic07.jpg" alt="" />
+					</span>
+					<header class="major">
+						<h1>Engineering Paper Generator</h1>
+					</header>
+					<div class="content">
+						<p>Page to generate Engineering paper...</p>
+					</div>
+				</div>
+	</section>
+
+    <div id="main">
+        <section id = "one">
+            <div class="inner">
+            <header class="major">
+            <h2>Paper Options</h2>
+            </header>
+
+            <label>Select Size:</label>
+            <select id="paperSize">
+                <option value="letter">Letter</option>
+                <option value="a4">A4</option>
+            </select>
+            <br><br>
+
+            <label>Select Paper Color:</label>
+            <input type="color" id="pageColor" value="#ffffff">
+            <br><br>
+
+            <label>Select Margins (mm):</label>
+            <input type="number" id="marg" value="10">
+            <br>
+
+            <label>Border Thickness:</label>
+            <input type="number" step="0.1" id="borderThickness" value="0.8"><br><br>
+
+            <label>Border Color:</label>
+            <input type="color" id="borderColor" value="#000000"><br><br>
+
+            <label> Enable  Heading & Margins </label>
+            <label class="switch">
+            <input type="checkbox" id="topsStyle" >
+            <span class="slider"></span>
+            </label>
+            
+            
+            <br><br>
+
+            </div>
+        </section>
+
+        <section id="two">
+            <div class="inner">
+                <header class="major">
+                <h2>Engineering Grid Details</h2>
+                </header>
+
+                <label>Grid Spacing (mm):</label>
+                <input type="number" id="spacing" value="5">
+                <br><br>
+
+                <label>Line Thickness:</label>
+                <input type="number" step="0.1" id="lineThickness" value="0.2">
+                <br><br>
+
+                <label>Grid Line Color:</label>
+                <input type="color" id="lineColor" value="#b6d7a8">
+                <br><br>
+
+            </div>
+        </section>
+
+        <section>
+            <div class="inner">
+            <header class="major">
+            <h2>Preview & Generate Paper</h2>
+            </header>
+
+            <label>Enter File Name:</label>
+            <input type="text" id="paperName" value="engineering_paper">
+            <br><br>
+
+            <ul class="actions">
+                <li><button onclick="generateEngineeringPDF()">Download PDF</button></li>
+                <li><button onclick="previewEngineeringPDF()">Preview</button></li>
+            </ul>
+
+            </div>
+        </section>
+    </div>
+
+
+    <footer id="footer">
+        <div class="inner">
+            <ul class="copyright">
+                <li>&copy; 2026</li>
+            </ul>
+        </div>
+    </footer>
+</div>
+
+</div>
+<!-- Scripts -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/jquery.scrollex.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/paper.js"></script>
+<script src="assets/js/jscolor.js"></script>
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>
