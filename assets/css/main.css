@@ -2694,7 +2694,7 @@ input:checked + .slider:before {
 				position: absolute;
 				right: 1.5em;
 				top: 0;
-				vertical-align: middle;
+				/*vertical-align: middle;*/
 				width: 36px;
 			}
 
@@ -3259,7 +3259,7 @@ input:checked + .slider:before {
 				line-height: inherit;
 				padding: 0 0.75em;
 				position: relative;
-				vertical-align: middle;
+				/*vertical-align: middle;*/
 			}
 
 				#header nav a:last-child {
@@ -3281,7 +3281,7 @@ input:checked + .slider:before {
 						position: absolute;
 						right: 1.5em;
 						top: 0;
-						vertical-align: middle;
+						/*vertical-align: middle;*/
 						width: 24px;
 					}
 
@@ -3965,7 +3965,7 @@ input:checked + .slider:before {
 			text-align: right;
 			text-indent: 8em;
 			top: 0;
-			vertical-align: middle;
+			/*vertical-align: middle;*/
 			white-space: nowrap;
 			width: 8em;
 		}
