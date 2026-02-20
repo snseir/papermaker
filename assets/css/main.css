@@ -126,7 +126,7 @@ input, select, textarea {
 
 	
 	input {
-		color: rgba(212, 212, 255, 0.035);
+		color:  #000000;
 		font-family: "Source Sans Pro", Helvetica, sans-serif;
 		font-size: 17pt;
 		font-weight: 300;
