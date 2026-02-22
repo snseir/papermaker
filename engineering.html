@@ -56,23 +56,32 @@
     <div id="main">
         <section id = "one">
             <div class="inner">
-            <header class="major">
-            <h2>Paper Options</h2>
-            </header>
+            <header class="major"> <h2>Paper Options</h2>  </header>
 
             <label>Select Size:</label>
             <select id="paperSize">
                 <option value="letter">Letter</option>
                 <option value="a4">A4</option>
-            </select>
-            <br><br>
+                <option value="custom">Custom</option>
+            </select> <br><br>
 
             <label>Select Paper Color:</label>
-            <input type="color" id="pageColor" value="#ffffff">
-            <br><br>
+            <input type="color" id="pageColor" value="#ffffff"> <br><br>
 
-            <label>Select Margins (mm):</label>
-            <input type="number" id="marg" value="10">
+            <label>Select Units:</label>
+            <select id="unitToggle">
+                <option value="in">in</option>
+                <option value="mm">mm</option>
+            </select> <br><br>
+
+            <label>Select Margins:</label>
+            <label>Top: <input type="number" id="margT" value="0.4" step="0.1"></label>
+            <label>Bottom: <input type="number" id="margB" value="0.6" step="0.1"></label>
+            <label>Left: <input type="number" id="margL" value="1.0" step="0.1"></label>
+            <label>Right: <input type="number" id="margR" value="0.5" step="0.1"></label>
+            <br><br>
+            
+
             <br>
 
             <label>Border Thickness:</label>
@@ -100,12 +109,23 @@
                 </header>
 
                 <label>Grid Spacing (mm):</label>
-                <input type="number" id="spacing" value="5">
-                <br><br>
+                <input type="number" id="spacing" value="5.08"> <br><br>
+                
+                <label>Major Line Every N Lines:</label>
+                <input type="number" id="majorEvery" value="5"><br><br>
 
                 <label>Line Thickness:</label>
                 <input type="number" step="0.1" id="lineThickness" value="0.2">
                 <br><br>
+
+                
+                <label>Minor Line Thickness:</label>
+                <input type="number" step="0.1" id="minorThickness" value="0.2"><br><br>
+
+                <label>Major Line Thickness:</label>
+                <input type="number" step="0.1" id="majorThickness" value="0.6"><br><br>
+
+     
 
                 <label>Grid Line Color:</label>
                 <input type="color" id="lineColor" value="#b6d7a8">

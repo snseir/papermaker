@@ -4,12 +4,10 @@ function hexToRGB(hex) {
 
 
 function buildPDF() {
-
     const { jsPDF } = window.jspdf;
 
     const paperSize = document.getElementById("paperSize").value;
     const fileName = document.getElementById("paperName").value;
-
     let width, height;
 
     if (paperSize === "letter") {
@@ -90,13 +88,6 @@ function generatePDF() {
 
 function previewPDF() {
     const doc = buildPDF();
-
-    // opens at bottom
-    //const blob = doc.output("blob");
-    //const url = URL.createObjectURL(blob);
-    //document.getElementById("pdfPreview").src = url;
-
-    // opens in new tab
     doc.output("dataurlnewwindow");
 }
 
@@ -136,20 +127,22 @@ function createColorPicker(displayId, panelId, inputId) {
 
 createColorPicker("minorDisplay","minorPanel","minorColor");
 
-
 function buildEngineeringPDF() {
-
     const { jsPDF } = window.jspdf;
 
     const paperSize = document.getElementById("paperSize").value;
     const fileName = document.getElementById("paperName").value;
+    const unitT = document.getElementById("unitToggle").value;
 
     let width, height;
 
     if (paperSize === "letter") {
         width = 216;
         height = 279;
-    } else {
+    } else if (paperSize === "custom") {
+
+    }
+    else {
         width = 210;
         height = 297;
     }
@@ -160,24 +153,39 @@ function buildEngineeringPDF() {
     });
 
     const pageColor = document.getElementById("pageColor").value;
-    const m = parseFloat(document.getElementById("marg").value);
 
-    const drawLeft = m;
-    const drawRight = width - m;
-    const drawTop = m;
-    const drawBottom = height - m;
+    let mT = parseFloat(document.getElementById("margT").value);
+    let mB = parseFloat(document.getElementById("margB").value);
+    let mL = parseFloat(document.getElementById("margL").value);
+    let mR = parseFloat(document.getElementById("margR").value);
+
+    //let mT, mB, mL, mR;
+
+
+    if (unitT === "in") {
+        // margins
+        mT = mT* 25.4;
+        mB = mB* 25.4;
+        mL = mL* 25.4;
+        mR = mR* 25.4;
+    }
+
+    const drawLeft = mL;
+    const drawRight = width - mR;
+    const drawTop = mT;
+    const drawBottom = height - mB;
 
     const spacing = parseFloat(document.getElementById("spacing").value);
-    const usableWidth = width - (2*m); 
+    const usableWidth = width - (mL+mR); 
     const eng_grd_dx = usableWidth/3;
 
-    // Engineering paper uses ONE thickness and ONE color
-    const lineThickness = parseFloat(
-        document.getElementById("lineThickness")?.value || 0.2
-    );
+    // Line Thickness
+    const lineThickness = parseFloat(document.getElementById("lineThickness")?.value || 0.2);
+    const minorThickness = parseFloat(document.getElementById("minorThickness").value);
+    const majorThickness = parseFloat(document.getElementById("majorThickness").value);
+    const majorEvery = parseInt(document.getElementById("majorEvery").value);
 
-    const lineColor = 
-        document.getElementById("lineColor")?.value || "#b6d7a8";
+    const lineColor = document.getElementById("lineColor")?.value || "#b6d7a8";
 
 
     function hexToRGB(hex) {
@@ -192,20 +200,25 @@ function buildEngineeringPDF() {
     doc.setFillColor(...hexToRGB(pageColor));
     doc.rect(0, 0, width, height, "F");
 
-    // Set uniform line style
-    doc.setLineWidth(lineThickness);
+    // line color
     doc.setDrawColor(...hexToRGB(lineColor));
 
-    // Vertical lines
-
-
+    // Veritcal Lines
+    let countX = 0;
     for (let x = drawLeft; x <= drawRight; x += spacing) {
+        if (countX % majorEvery === 0) {doc.setLineWidth(majorThickness);}
+        else {doc.setLineWidth(minorThickness);}
         doc.line(x, drawTop, x, drawBottom);
+        countX++;
     }
 
-    // Horizontal lines
+    // Horizontal
+    let countY = 0;
     for (let y = drawTop; y <= drawBottom; y += spacing) {
+        if (countY % majorEvery === 0) {doc.setLineWidth(majorThickness);}
+        else {doc.setLineWidth(minorThickness);}
         doc.line(drawLeft, y, drawRight, y);
+        countY++;
     }
 
     // ----- ENGINEERING BORDER -----
@@ -223,23 +236,21 @@ function buildEngineeringPDF() {
     doc.rect(drawLeft, drawTop, drawRight - drawLeft, drawBottom - drawTop);
 
     // ----- TOPS STYLE HEADER -----
-
     const topsEnabled = document.getElementById("topsStyle")?.checked;
-
     if (topsEnabled) {
 
         doc.setLineWidth(borderThickness);
         doc.setDrawColor(...hexToRGB(borderColor));
 
         // Draw  vertical header lines
-        doc.line(m+eng_grd_dx, 0, m+eng_grd_dx, drawTop);
-        doc.line(m+2*eng_grd_dx, 0, m+2*eng_grd_dx, drawTop);
-        doc.line(m+3*eng_grd_dx, 0, m+3*eng_grd_dx, drawTop);
+        doc.line(mL+eng_grd_dx, 0, mL+eng_grd_dx, drawTop);
+        doc.line(mL+2*eng_grd_dx, 0, mL+2*eng_grd_dx, drawTop);
+        doc.line(mL+3*eng_grd_dx, 0, mL+3*eng_grd_dx, drawTop);
 
         // Extend LEFT and RIGHT grid bounds to the top
-        doc.line(m, 0, m, height);
-        doc.line(width - m, 0, width - m, height);
-        doc.line(0, m, width, m);
+        doc.line(mL, 0, mL, height);
+        doc.line(width - mR, 0, width - mR, height);
+        doc.line(0, mT, width, mT);
     }
 
     return doc;
@@ -255,3 +266,4 @@ function previewEngineeringPDF() {
     const doc = buildEngineeringPDF();
     doc.output("dataurlnewwindow");
 }
+
