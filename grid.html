@@ -1,302 +1,154 @@
 <!DOCTYPE HTML>
 <html>
-	<head>
-		<title>Grid Paper Generator</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> 
-	</head>
-	<body class="is-preload">
+<head>
+	<title>Grid Paper Generator</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<link rel="stylesheet" href="assets/css/row.css" />
+	<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> 
+</head>
 
-		<!-- Wrapper -->
-			<div id="wrapper">
+<body class="is-preload">
 
-				<!-- Header -->
-				<!-- Note: The "styleN" class below should match that of the banner element. -->
-					<header id="header" class="alt style2">
-						<a href="index.html" class="logo"><strong>PAPER</strong> <span>WHAT</span></a>
-						<nav>
-							<a href="#menu">Menu</a>
-						</nav>
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Header -->
+		<!-- Note: The "styleN" class below should match that of the banner element. -->
+		<header id="header" class="alt style2">
+			<a href="index.html" class="logo"><strong>PAPER</strong> <span>WHAT</span></a>
+			<nav><a href="#menu">Menu</a></nav>
+		</header>		
+
+		<!-- Menu -->
+		<nav id="menu">
+			<ul class="links">
+				<li><a href="index.html">Home</a></li>
+				<li><a href="grid.html">Grid</a></li>
+				<li><a href="landing.html">Isometric</a></li>
+				<li><a href="landing.html">Lined</a></li>
+				<li><a href="generic.html">Engineering</a></li>
+				<li><a href="elements.html">Dot Grid</a></li>
+				<li><a href="elements.html">Other</a></li>
+			</ul>
+		</nav>
+
+		<!-- Banner -->
+		<!-- Note: The "styleN" class below should match that of the header element. -->
+		<section id="banner" class="style2">
+			<div class="inner">
+				<span class="image">
+					<img src="images/pic07.jpg" alt="" />
+				</span>
+				<header class="major">
+					<h1>Grid Paper Generator</h1>
+				</header>
+				<div class="content">
+					<p>Page to generate grid paper with multiwidth and multicolor options.</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Main -->
+		<div id="main">
+
+			<!-- One -->
+			<section id="one">
+				<div class="inner">
+					<header class="major">
+						<h2>Paper options</h2>
 					</header>
 
-				<!-- Menu -->
-					<nav id="menu">
-						<ul class="links">
-							<li><a href="index.html">Home</a></li>
-							<li><a href="grid.html">Grid</a></li>
-							<li><a href="landing.html">Isometric</a></li>
-							<li><a href="landing.html">Lined</a></li>
-							<li><a href="generic.html">Engineering</a></li>
-							<li><a href="elements.html">Dot Grid</a></li>
-							<li><a href="elements.html">Other</a></li>
-						</ul>
-					</nav>
+                    <label>Select Size:</label>
+					<select id="paperSize">
+                        <option value="letter">Letter</option>
+                        <option value="a4">A4</option>
+                    </select>
+                    <br>
 
-				<!-- Banner -->
-				<!-- Note: The "styleN" class below should match that of the header element. -->
-					<section id="banner" class="style2">
-						<div class="inner">
-							<span class="image">
-								<img src="images/pic07.jpg" alt="" />
-							</span>
-							<header class="major">
-								<h1>Grid Paper Generator</h1>
-							</header>
-							<div class="content">
-								<p>Page to generate grid paper with multiwidth and multicolor options.</p>
-							</div>
-						</div>
-					</section>
+                    <label>Select Paper Color:
+                    <input type="color" id="pageColor" value="#ffffff" >
+                    <br><br>
+                    
+                    <label>Select Margins (mm): </label>
+					Top/Bottom:
+                    <input type="number" id="margTB" value="5"><br>
+					Left/Right:
+					<input type="number" id="margLR" value="5"><br>
 
-				<!-- Main -->
-					<div id="main">
+				</div>
+			</section>
 
-						<!-- One -->
-							<section id="one">
-								<div class="inner">
-									<header class="major">
-										<h2>Paper options</h2>
-									</header>
-
-                                    <label>Select Size:</label>
-									<select id="paperSize">
-                                        <option value="letter">Letter</option>
-                                        <option value="a4">A4</option>
-                                    </select>
-                                    <br>
-
-                                    <label>Select Paper Color:
-                                    <input type="color" id="pageColor" value="#ffffff" >
-                                    <br><br>
-                                    
-                                    <label>Select Margins (mm): </label>
-                                    <input type="number" id="marg" value="5"><br>
-                         
-
-								</div>
-
-							</section>
-
-                        <!-- Two -->
-							<section id="two">
-								<div class="inner">
-									<header class="major">
-										<h2>Grid Details</h2>
-									</header>
-                                    <label>Grid Spacing (mm):</label>
-                                    <input type="number" id="spacing" value="5">
-                                    <br><br>
-
-                                    <label>Minor Line Thickness:</label>
-                                    <input type="number" step="0.1" id="minorThickness" value="0.2"><br><br>
-
-                                    <label>Major Line Thickness:</label>
-                                    <input type="number" step="0.1" id="majorThickness" value="0.6"><br><br>
-
-                                    <label>Major Line Every N Lines:</label>
-                                    <input type="number" id="majorEvery" value="5"><br><br>
-
-                                    Minor Line Color: 
-                                    <input type="color" id="minorColor" value="#dddddd"><br><br> 
-
-                                    Major Line Color: 
-                                    <input type="color" id="majorColor" value="#aaaaaa"><br><br>
-								</div>
-							</section>
-
-						
-
-						<!-- Three -->
-							<section id="three">
-								<div class="inner">
-									<header class="major">
-										<h2>Preview & Generate Paper</h2>
-									</header>
-									    Enter File Name:
-                                        <input type="text" id="paperName" value="grid_paper"><br><br>
-                                        
-									<ul class="actions">
-                                        <li><button onclick="generatePDF()">Download PDF</button></li>
-										<li><button onclick="previewPDF()">Preview</button></li>
-									</ul>
-								</div>
-							</section>
-					</div>
-
-				<!-- Footer -->
-					<footer id="footer">
-						<div class="inner">
-							<ul class="copyright">
-								<li>&copy; 2026</li>
-							</ul>
-						</div>
-					</footer>
-
-			</div>
-
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-            <script src="assets/js/paper.js"></script>
-            <script src="assets/js/jscolor.js"></script>
-			<script src="assets/js/main.js"></script>
-	</body>
-</html>
-<!DOCTYPE HTML>
-<html>
-	<head>
-		<title>Grid Paper Generator</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> 
-	</head>
-	<body class="is-preload">
-
-		<!-- Wrapper -->
-			<div id="wrapper">
-
-				<!-- Header -->
-				<!-- Note: The "styleN" class below should match that of the banner element. -->
-					<header id="header" class="alt style2">
-						<a href="index.html" class="logo"><strong>PAPER</strong> <span>WHAT</span></a>
-						<nav>
-							<a href="#menu">Menu</a>
-						</nav>
+            <!-- Two -->
+			<section id="two">
+				<div class="inner">
+					<header class="major">
+						<h2>Grid Details</h2>
 					</header>
+                    <label>Grid Spacing (mm):</label>
+                    <input type="number" id="spacing" value="5">
+                    <br><br>
 
-				<!-- Menu -->
-					<nav id="menu">
-						<ul class="links">
-							<li><a href="index.html">Home</a></li>
-							<li><a href="grid.html">Grid</a></li>
-							<li><a href="landing.html">Isometric</a></li>
-							<li><a href="landing.html">Lined</a></li>
-							<li><a href="generic.html">Engineering</a></li>
-							<li><a href="elements.html">Dot Grid</a></li>
-							<li><a href="elements.html">Other</a></li>
-						</ul>
-					</nav>
+                    <label>Minor Line Thickness:</label>
+                    <input type="number" step="0.1" id="minorThickness" value="0.2"><br><br>
 
-				<!-- Banner -->
-				<!-- Note: The "styleN" class below should match that of the header element. -->
-					<section id="banner" class="style2">
-						<div class="inner">
-							<span class="image">
-								<img src="images/pic07.jpg" alt="" />
-							</span>
-							<header class="major">
-								<h1>Grid Paper Generator</h1>
-							</header>
-							<div class="content">
-								<p>Page to generate grid paper with multiwidth and multicolor options.</p>
-							</div>
-						</div>
-					</section>
+                    <label>Major Line Thickness:</label>
+                    <input type="number" step="0.1" id="majorThickness" value="0.6"><br><br>
 
-				<!-- Main -->
-					<div id="main">
+                    <label>Major Line Every N Lines:</label>
+                    <input type="number" id="majorEvery" value="5"><br><br>
 
-						<!-- One -->
-							<section id="one">
-								<div class="inner">
-									<header class="major">
-										<h2>Paper options</h2>
-									</header>
+                    Minor Line Color: 
+                    <input type="color" id="minorColor" value="#dddddd"><br><br> 
 
-                                    <label>Select Size:</label>
-									<select id="paperSize">
-                                        <option value="letter">Letter</option>
-                                        <option value="a4">A4</option>
-                                    </select>
-                                    <br>
+                    Major Line Color: 
+                    <input type="color" id="majorColor" value="#aaaaaa"><br><br>
+				</div>
+			</section>
 
-                                    <label>Select Paper Color:
-                                    <input type="color" id="pageColor" value="#ffffff" >
-                                    <br><br>
-                                    
-                                    <label>Select Margins (mm): </label>
-                                    <input type="number" id="marg" value="5"><br>
-                         
+			
 
-								</div>
+			<!-- Three -->
+			<section id="three">
+				<div class="inner">
+					<header class="major">
+						<h2>Preview & Generate Paper</h2>
+					</header>
+					    Enter File Name:
+                        <input type="text" id="paperName" value="grid_paper"><br><br>
+                        
+					<ul class="actions">
+                        <li><button onclick="generatePDF()">Download PDF</button></li>
+						<li><button onclick="previewPDF()">Preview</button></li>
+					</ul>
+				</div>
+			</section>
+		</div>
 
-							</section>
-
-                        <!-- Two -->
-							<section id="two">
-								<div class="inner">
-									<header class="major">
-										<h2>Grid Details</h2>
-									</header>
-                                    <label>Grid Spacing (mm):</label>
-                                    <input type="number" id="spacing" value="5">
-                                    <br><br>
-
-                                    <label>Minor Line Thickness:</label>
-                                    <input type="number" step="0.1" id="minorThickness" value="0.2"><br><br>
-
-                                    <label>Major Line Thickness:</label>
-                                    <input type="number" step="0.1" id="majorThickness" value="0.6"><br><br>
-
-                                    <label>Major Line Every N Lines:</label>
-                                    <input type="number" id="majorEvery" value="5"><br><br>
-
-                                    Minor Line Color: 
-                                    <input type="color" id="minorColor" value="#dddddd"><br><br> 
-
-                                    Major Line Color: 
-                                    <input type="color" id="majorColor" value="#aaaaaa"><br><br>
-								</div>
-							</section>
-
-						
-
-						<!-- Three -->
-							<section id="three">
-								<div class="inner">
-									<header class="major">
-										<h2>Preview & Generate Paper</h2>
-									</header>
-									    Enter File Name:
-                                        <input type="text" id="paperName" value="grid_paper"><br><br>
-                                        
-									<ul class="actions">
-                                        <li><button onclick="generatePDF()">Download PDF</button></li>
-										<li><button onclick="previewPDF()">Preview</button></li>
-									</ul>
-								</div>
-							</section>
-					</div>
-
-				<!-- Footer -->
-					<footer id="footer">
-						<div class="inner">
-							<ul class="copyright">
-								<li>&copy; 2026</li>
-							</ul>
-						</div>
-					</footer>
-
+		<!-- Footer -->
+		<footer id="footer">
+			<div class="inner">
+				<ul class="copyright">
+					<li>&copy; 2026</li> 
+					<li><a href="index.html.html">Home</a></li>
+				</ul>
 			</div>
+		</footer>
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-            <script src="assets/js/paper.js"></script>
-            <script src="assets/js/jscolor.js"></script>
-			<script src="assets/js/main.js"></script>
-	</body>
+	</div>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+    <script src="assets/js/paper.js"></script>
+    <script src="assets/js/jscolor.js"></script>
+	<script src="assets/js/main.js"></script>
+</body>
 </html>
+

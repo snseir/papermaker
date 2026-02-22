@@ -1,3 +1,8 @@
+function hexToRGB(hex) {
+    return [parseInt(hex.substring(1,3),16), parseInt(hex.substring(3,5),16), parseInt(hex.substring(5,7),16)];
+}
+
+
 function buildPDF() {
 
     const { jsPDF } = window.jspdf;
@@ -22,12 +27,13 @@ function buildPDF() {
 
     const pageColor = document.getElementById("pageColor").value;
 
-    const m = parseFloat(document.getElementById("marg").value);
+    const mTB = parseFloat(document.getElementById("margTB").value);
+    const mLR = parseFloat(document.getElementById("margLR").value);
 
-    const drawLeft = m;
-    const drawRight = width - m;
-    const drawTop = m;
-    const drawBottom = height - m;
+    const drawLeft = mLR;
+    const drawRight = width - mLR;
+    const drawTop = mTB;
+    const drawBottom = height - mTB;
 
     const spacing = parseFloat(document.getElementById("spacing").value);
     const minorThickness = parseFloat(document.getElementById("minorThickness").value);
@@ -37,13 +43,7 @@ function buildPDF() {
     const minorColor = document.getElementById("minorColor").value;
     const majorColor = document.getElementById("majorColor").value;
 
-    function hexToRGB(hex) {
-        return [
-            parseInt(hex.substring(1,3),16),
-            parseInt(hex.substring(3,5),16),
-            parseInt(hex.substring(5,7),16)
-        ];
-    }
+    
 
     // page color
     doc.setFillColor(...hexToRGB(pageColor));
@@ -168,6 +168,8 @@ function buildEngineeringPDF() {
     const drawBottom = height - m;
 
     const spacing = parseFloat(document.getElementById("spacing").value);
+    const usableWidth = width - (2*m); 
+    const eng_grd_dx = usableWidth/3;
 
     // Engineering paper uses ONE thickness and ONE color
     const lineThickness = parseFloat(
@@ -195,6 +197,8 @@ function buildEngineeringPDF() {
     doc.setDrawColor(...hexToRGB(lineColor));
 
     // Vertical lines
+
+
     for (let x = drawLeft; x <= drawRight; x += spacing) {
         doc.line(x, drawTop, x, drawBottom);
     }
@@ -210,15 +214,13 @@ function buildEngineeringPDF() {
     );
 
     const borderColor =
-        document.getElementById("borderColor")?.value || "#000000";
+        document.getElementById("borderColor")?.value || "#b6d7a8";
 
     doc.setLineWidth(borderThickness);
     doc.setDrawColor(...hexToRGB(borderColor));
 
     // Draw border rectangle at margin
-    doc.rect(drawLeft, drawTop,
-             drawRight - drawLeft,
-             drawBottom - drawTop);
+    doc.rect(drawLeft, drawTop, drawRight - drawLeft, drawBottom - drawTop);
 
     // ----- TOPS STYLE HEADER -----
 
@@ -226,21 +228,18 @@ function buildEngineeringPDF() {
 
     if (topsEnabled) {
 
-        const headerHeight = spacing * 3; // height of heading area
-        const topOfHeader = drawTop - headerHeight;
+        doc.setLineWidth(borderThickness);
+        doc.setDrawColor(...hexToRGB(borderColor));
 
-        doc.setLineWidth(lineThickness);
-        doc.setDrawColor(...hexToRGB(lineColor));
+        // Draw  vertical header lines
+        doc.line(m+eng_grd_dx, 0, m+eng_grd_dx, drawTop);
+        doc.line(m+2*eng_grd_dx, 0, m+2*eng_grd_dx, drawTop);
+        doc.line(m+3*eng_grd_dx, 0, m+3*eng_grd_dx, drawTop);
 
-        // 1️⃣ Draw 5 vertical header lines
-        for (let i = 0; i < 5; i++) {
-            let x = drawLeft + (i * spacing);
-            doc.line(x, topOfHeader, x, drawTop);
-        }
-
-        // 2️⃣ Extend LEFT and RIGHT grid bounds to the top
-        doc.line(drawLeft, topOfHeader, drawLeft, drawBottom);
-        doc.line(drawRight, topOfHeader, drawRight, drawBottom);
+        // Extend LEFT and RIGHT grid bounds to the top
+        doc.line(m, 0, m, height);
+        doc.line(width - m, 0, width - m, height);
+        doc.line(0, m, width, m);
     }
 
     return doc;
