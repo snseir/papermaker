@@ -1,12 +1,8 @@
-function hexToRGB(hex) {
-    return [parseInt(hex.substring(1,3),16), parseInt(hex.substring(3,5),16), parseInt(hex.substring(5,7),16)];
-}
-
-function createBasePDF() {
+function buildPDF() {
     const { jsPDF } = window.jspdf;
 
     const paperSize = document.getElementById("paperSize").value;
-    const pageColor = document.getElementById("pageColor").value;
+    const fileName = document.getElementById("paperName").value;
     let width, height;
 
     if (paperSize === "letter") {
@@ -22,30 +18,15 @@ function createBasePDF() {
         format: [width, height]
     });
 
-    doc.pageWidth = width;
-    doc.pageHeight = height;
+    const pageColor = document.getElementById("pageColor").value;
 
-    // Fill background
-    doc.setFillColor(...hexToRGB(pageColor));
-    doc.rect(0, 0, width, height, "F");
+    const mTB = parseFloat(document.getElementById("margTB").value);
+    const mLR = parseFloat(document.getElementById("margLR").value);
 
-    return doc;
-}
-
-function renderGrid(doc) {
-    // Margins
-    let mT = parseFloat(document.getElementById("margT").value);
-    let mB = parseFloat(document.getElementById("margB").value);
-    let mL = parseFloat(document.getElementById("margL").value);
-    let mR = parseFloat(document.getElementById("margR").value);
-
-    const width = doc.pageWidth;
-    const height = doc.pageHeight;
-
-    const drawLeft = mL;
-    const drawRight = width - mR;
-    const drawTop = mT;
-    const drawBottom = height - mB;
+    const drawLeft = mLR;
+    const drawRight = width - mLR;
+    const drawTop = mTB;
+    const drawBottom = height - mTB;
 
     const spacing = parseFloat(document.getElementById("spacing").value);
     const minorThickness = parseFloat(document.getElementById("minorThickness").value);
@@ -54,6 +35,11 @@ function renderGrid(doc) {
 
     const minorColor = document.getElementById("minorColor").value;
     const majorColor = document.getElementById("majorColor").value;
+
+    
+    // page color
+    doc.setFillColor(...hexToRGB(pageColor));
+    doc.rect(0, 0, width, height, "F");
 
     let countX = 0;
     for (let x = drawLeft; x <= drawRight; x += spacing) {
@@ -85,17 +71,43 @@ function renderGrid(doc) {
         countY++;
     }
 
+    return doc;
 }
 
-function renderEngineering(doc) {
+function buildEngineeringPDF() {
+    const { jsPDF } = window.jspdf;
+
+    const paperSize = document.getElementById("paperSize").value;
+    const fileName = document.getElementById("paperName").value;
+    const unitT = document.getElementById("unitToggle").value;
+
+    let width, height;
+
+    if (paperSize === "letter") {
+        width = 216;
+        height = 279;
+    } else if (paperSize === "custom") {
+
+    }
+    else {
+        width = 210;
+        height = 297;
+    }
+
+    const doc = new jsPDF({
+        unit: "mm",
+        format: [width, height]
+    });
+
+    const pageColor = document.getElementById("pageColor").value;
+
     let mT = parseFloat(document.getElementById("margT").value);
     let mB = parseFloat(document.getElementById("margB").value);
     let mL = parseFloat(document.getElementById("margL").value);
     let mR = parseFloat(document.getElementById("margR").value);
 
-    const width = doc.pageWidth;
-    const height = doc.pageHeight;
-    const unitT = document.getElementById("unitToggle").value;
+    //let mT, mB, mL, mR;
+
 
     if (unitT === "in") {
         // margins
@@ -105,9 +117,11 @@ function renderEngineering(doc) {
         mR = mR* 25.4;
     }
 
-    const drawLeft = mL; const drawRight = width - mR; 
-    const drawTop = mT; const drawBottom = height - mB;
-    
+    const drawLeft = mL;
+    const drawRight = width - mR;
+    const drawTop = mT;
+    const drawBottom = height - mB;
+
     const spacing = parseFloat(document.getElementById("spacing").value);
     const usableWidth = width - (mL+mR); 
     const eng_grd_dx = usableWidth/3;
@@ -120,6 +134,20 @@ function renderEngineering(doc) {
 
     const lineColor = document.getElementById("lineColor")?.value || "#b6d7a8";
 
+
+    function hexToRGB(hex) {
+        return [
+            parseInt(hex.substring(1,3),16),
+            parseInt(hex.substring(3,5),16),
+            parseInt(hex.substring(5,7),16)
+        ];
+    }
+
+    // Fill page
+    doc.setFillColor(...hexToRGB(pageColor));
+    doc.rect(0, 0, width, height, "F");
+
+    // line color
     doc.setDrawColor(...hexToRGB(lineColor));
 
     // Veritcal Lines
@@ -145,7 +173,9 @@ function renderEngineering(doc) {
         document.getElementById("borderThickness")?.value || 0.8
     );
 
-    const borderColor = document.getElementById("borderColor")?.value || "#b6d7a8";
+    const borderColor =
+        document.getElementById("borderColor")?.value || "#b6d7a8";
+
     doc.setLineWidth(borderThickness);
     doc.setDrawColor(...hexToRGB(borderColor));
 
@@ -169,82 +199,60 @@ function renderEngineering(doc) {
         doc.line(width - mR, 0, width - mR, height);
         doc.line(0, mT, width, mT);
     }
-}
 
-function renderIsometric(doc, config) {
-
-    let mT = parseFloat(document.getElementById("margT").value);
-    let mB = parseFloat(document.getElementById("margB").value);
-    let mL = parseFloat(document.getElementById("margL").value);
-    let mR = parseFloat(document.getElementById("margR").value);
-
-    const width = doc.pageWidth;
-    const height = doc.pageHeight;
-
-    const drawLeft = mL; const drawRight = width - mR; 
-    const drawTop = mT; const drawBottom = height - mB;
-
-    const spacing = parseFloat(document.getElementById("spacing").value);
-    const lineThickness = parseFloat(document.getElementById("minorThickness").value);
-    const lineColor = document.getElementById("minorColor").value;
-
-    doc.setLineWidth(lineThickness);
-    doc.setDrawColor(...hexToRGB(lineColor));
-
-    const slope = Math.sqrt(3);
-
-    // Vertical lines
-    for (let x = drawLeft; x <= drawRight; x += spacing) {
-        doc.line(x, drawTop, x, drawBottom);
-    }
-
-    // 60° lines
-    for (let x = drawLeft - height; x <= drawRight + height; x += spacing) {
-        let x1 = x;
-        let y1 = drawTop;
-        let x2 = x + (drawBottom - drawTop) / slope;
-        let y2 = drawBottom;
-
-        doc.line(x1, y1, x2, y2);
-    }
-
-    // ---------------------
-    // -60° lines
-    // ---------------------
-    for (let x = drawLeft - height; x <= drawRight + height; x += spacing) {
-        let x1 = x;
-        let y1 = drawBottom;
-        let x2 = x + (drawTop - drawBottom) / slope;
-        let y2 = drawTop;
-
-        doc.line(x1, y1, x2, y2);
-    }
-}
-
-
-
-function buildPDF(type) {
-    const doc = createBasePDF();
-
-    const renderers = {
-        engineering: renderEngineering,
-        grid: renderGrid,
-        isometric: renderIsometric
-        // lined: renderLined
-    };
-
-    const renderer = renderers[type];
-    if (renderer) renderer(doc);
     return doc;
 }
 
+/*
+
+function buildIsometricPDF() {}
+function buildLinedPDF() {}
+
 function generatePDF(type) {
     const fileName = document.getElementById("paperName").value;
-    const doc = buildPDF(type);
+    //const builder = builders[type] || builders.default;
+    // const doc = builder();
+    
+    if (type = "engineering") {
+        const doc = buildEngineeringPDF();
+        doc.save(fileName + ".pdf");
+    } 
+    else if (type = "isometric") {
+        buildIsometricPDF();
+        doc.save(fileName + ".pdf");
+    }
+    else if (type = "lined") {
+        buildLinedPDF();
+        doc.save(fileName + ".pdf");
+    }
+    else {
+        buildPDF();
     doc.save(fileName + ".pdf");
 }
+}
+
 
 function previewPDF(type) {
-    const doc = buildPDF(type);
-    doc.output("dataurlnewwindow");
+    //const builder = builders[type] || builders.default;
+    //const doc = builder();
+    
+    if (type = "engineering") {
+        const doc = buildEngineeringPDF();
+        doc.output("dataurlnewwindow");
+    } 
+    else if (type = "isometric") {
+        buildIsometricPDF();
+        doc.output("dataurlnewwindow");
+    }
+    else if (type = "lined") {
+        buildLinedPDF();
+        doc.output("dataurlnewwindow");
+    }
+    else {
+        buildPDF();
+        doc.output("dataurlnewwindow");
+    }
 }
+
+
+*/

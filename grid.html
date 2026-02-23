@@ -65,18 +65,18 @@
 					<select id="paperSize">
                         <option value="letter">Letter</option>
                         <option value="a4">A4</option>
-                    </select>
-                    <br>
+                    </select><br><br>
+                    
 
                     <label>Select Paper Color:
-                    <input type="color" id="pageColor" value="#ffffff" >
-                    <br><br>
-                    
-                    <label>Select Margins (mm): </label>
-					Top/Bottom:
-                    <input type="number" id="margTB" value="5"><br>
-					Left/Right:
-					<input type="number" id="margLR" value="5"><br>
+                    <input type="color" id="pageColor" value="#ffffff" ><br><br>
+
+					<label>Select Margins:</label>
+					<label>Top:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="number" id="margT" value="5"></label>
+					<label>Bottom: <input type="number" id="margB" value="5"></label>
+					<label>Left: &nbsp;&nbsp;<input type="number" id="margL" value="5"></label>
+					<label>Right: <input type="number" id="margR" value="5"></label>
+					<br><br>
 
 				</div>
 			</section>
@@ -120,8 +120,10 @@
                         <input type="text" id="paperName" value="grid_paper"><br><br>
                         
 					<ul class="actions">
-                        <li><button onclick="generatePDF()">Download PDF</button></li>
-						<li><button onclick="previewPDF()">Preview</button></li>
+                        <!--<li><button onclick="generatePDF()">Download PDF</button></li>
+						<li><button onclick="previewPDF()">Preview</button></li>-->
+						<li><button onclick="generatePDF('grid')">Download PDF</button></li>
+						<li><button onclick="previewPDF('grid')">Preview</button></li>
 					</ul>
 				</div>
 			</section>
