@@ -190,38 +190,108 @@ function renderIsometric(doc, config) {
 
     doc.setLineWidth(lineThickness);
     doc.setDrawColor(...hexToRGB(lineColor));
+    
+    const spacingV = spacing * Math.sqrt(3)/2; // vertical lines are farther apart
+    let usableWidth = width - (mL+mR);
+    const tanValue = Math.tan(30 * Math.PI / 180);
+    let dy = usableWidth*tanValue;
 
-    const slope = Math.sqrt(3);
-
-    // Vertical lines
-    for (let x = drawLeft; x <= drawRight; x += spacing) {
+    // Draw vertical lines
+    for (let x = drawLeft; x <= drawRight; x += spacingV) {
         doc.line(x, drawTop, x, drawBottom);
     }
 
-    // 60° lines
-    for (let x = drawLeft - height; x <= drawRight + height; x += spacing) {
-        let x1 = x;
-        let y1 = drawTop;
-        let x2 = x + (drawBottom - drawTop) / slope;
-        let y2 = drawBottom;
+    // + 30 
+    for (let y = drawTop - usableWidth; y <= drawBottom + usableWidth; y += spacing) {
+        // Line runs from (drawLeft, y) to (drawLeft + usableWidth, y + dy)
+        let x1 = drawLeft, y1 = y;
+        let x2 = x1 + usableWidth;
+        let y2 = y1 - dy;
 
-        doc.line(x1, y1, x2, y2);
+        const clipped = clipLineToRect(x1, y1, x2, y2, drawLeft, drawTop, drawRight, drawBottom);
+        if (clipped) {
+            doc.line(clipped[0], clipped[1], clipped[2], clipped[3]);
+        }
+
+        let y3 = y + dy;
+        const clipped_m30 = clipLineToRect(x1, y1, x2, y3, drawLeft, drawTop, drawRight, drawBottom);
+        if (clipped_m30) {doc.line(clipped_m30[0], clipped_m30[1], clipped_m30[2], clipped_m30[3]);}
     }
 
-    // ---------------------
-    // -60° lines
-    // ---------------------
-    for (let x = drawLeft - height; x <= drawRight + height; x += spacing) {
-        let x1 = x;
-        let y1 = drawBottom;
-        let x2 = x + (drawTop - drawBottom) / slope;
-        let y2 = drawTop;
+    // rectangle border
+    doc.rect(drawLeft, drawTop, drawRight - drawLeft, drawBottom - drawTop);
+}
 
-        doc.line(x1, y1, x2, y2);
+function renderDot(doc) {
+    let mT = parseFloat(document.getElementById("margT").value);
+    let mB = parseFloat(document.getElementById("margB").value);
+    let mL = parseFloat(document.getElementById("margL").value);
+    let mR = parseFloat(document.getElementById("margR").value);
+
+    const width = doc.pageWidth;
+    const height = doc.pageHeight;
+
+    const drawLeft = mL; const drawRight = width - mR; 
+    const drawTop = mT; const drawBottom = height - mB;
+
+    const spacing = parseFloat(document.getElementById("spacing").value);
+    const dotSize = parseFloat(document.getElementById("minorThickness").value);
+    const dotColor = document.getElementById("minorColor").value;
+
+    doc.setLineWidth(dotSize);
+    //doc.setDrawColor(...hexToRGB(dotColor));
+    
+    // Loop through y positions
+    for (let y = drawTop; y <= drawBottom; y += spacing) {
+        // Loop through x positions
+        for (let x = drawLeft; x <= drawRight; x += spacing) {
+            doc.setFillColor(...hexToRGB(dotColor));
+            doc.circle(x, y, dotSize / 2, 'F'); // 'F' means fill the circle
+        }
     }
 }
 
+function renderLined(doc) {
+    let mT = parseFloat(document.getElementById("margT").value);
+    let mB = parseFloat(document.getElementById("margB").value);
+    let mL = parseFloat(document.getElementById("margL").value);
+    let mR = parseFloat(document.getElementById("margR").value);
 
+    const width = doc.pageWidth;
+    const height = doc.pageHeight;
+
+    const drawLeft = mL; const drawRight = width - mR; 
+    const drawTop = mT; const drawBottom = height - mB;
+    
+    let spacing = 10; 
+    const lineThickness = parseFloat(document.getElementById("lineThickness").value);
+    const lineColor = document.getElementById("lineColor").value;
+
+    if (spacing === 'college') {
+        spacing = 7;
+    } else if (spacing === 'wide') {
+        spacing = 8;
+    } else {
+        spacing = parseFloat(document.getElementById("cust_spacing").value);
+    }
+
+
+
+    doc.setLineWidth(lineThickness);
+    doc.setDrawColor(...hexToRGB(lineColor));
+    
+    for (let y = drawTop; y <= drawBottom; y += spacing) {
+        doc.line(drawLeft, y, drawRight, y);
+    }
+
+    const VRLEnabled = document.getElementById("VRL")?.checked;
+    if (VRLEnabled) {
+        const ruleX = drawLeft + 25;
+        doc.setLineWidth(0.6); // Typical thickness for rule line
+        doc.setDrawColor(255, 0, 0); // Pure red
+        doc.line(ruleX, drawTop, ruleX, drawBottom);
+    }
+}
 
 function buildPDF(type) {
     const doc = createBasePDF();
@@ -229,8 +299,9 @@ function buildPDF(type) {
     const renderers = {
         engineering: renderEngineering,
         grid: renderGrid,
-        isometric: renderIsometric
-        // lined: renderLined
+        isometric: renderIsometric,
+        dot: renderDot,
+        lined: renderLined
     };
 
     const renderer = renderers[type];
@@ -247,4 +318,40 @@ function generatePDF(type) {
 function previewPDF(type) {
     const doc = buildPDF(type);
     doc.output("dataurlnewwindow");
+}
+
+// Clip a segment to a rectangle: returns null or [x1, y1, x2, y2] for the visible segment.
+function clipLineToRect(x1, y1, x2, y2, left, top, right, bottom) {
+    let dx = x2 - x1, dy = y2 - y1;
+    let t0 = 0, t1 = 1;
+
+    const checks = [
+        {p: -dx, q: x1 - left},
+        {p:  dx, q: right - x1},
+        {p: -dy, q: y1 - top},
+        {p:  dy, q: bottom - y1},
+    ];
+
+    for (let i = 0; i < checks.length; i++) {
+        const {p, q} = checks[i];
+        if (p === 0) {
+            if (q < 0) return null; // Line parallel and outside
+        } else {
+            const r = q / p;
+            if (p < 0) {
+                if (r > t1) return null;
+                else if (r > t0) t0 = r;
+            } else {
+                if (r < t0) return null;
+                else if (r < t1) t1 = r;
+            }
+        }
+    }
+
+    // Calculate clipped points
+    let nx1 = x1 + t0 * dx;
+    let ny1 = y1 + t0 * dy;
+    let nx2 = x1 + t1 * dx;
+    let ny2 = y1 + t1 * dy;
+    return [nx1, ny1, nx2, ny2];
 }
