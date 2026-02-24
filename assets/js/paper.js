@@ -10,8 +10,8 @@ function createBasePDF() {
     let width, height;
 
     if (paperSize === "letter") {
-        width = 216;
-        height = 279;
+        width = 215.9;
+        height = 279.4;
     } else {
         width = 210;
         height = 297;
